@@ -1,0 +1,37 @@
+# API Django - Gestion des Nombres
+
+Ce projet est une API Django simple qui propose deux fonctionnalités principales :
+1. Retourner les nombres pairs à partir d'une liste donnée.
+2. Calculer la somme de deux nombres donnés.
+
+## Scripts Disponibles
+
+Dans le répertoire du projet, vous pouvez exécuter les commandes suivantes :
+
+### `python manage.py runserver`
+
+Lance l'application en mode développement.  
+Ouvrez [http://127.0.0.1:8000](http://127.0.0.1:8000) pour voir l'application dans le navigateur.
+
+L'API supporte deux endpoints principaux :
+- [http://127.0.0.1:8000/api/numbers/](http://127.0.0.1:8000/api/numbers/)
+- [http://127.0.0.1:8000/api/sum/](http://127.0.0.1:8000/api/sum/)
+
+### `python manage.py test`
+
+Lance le test runner en mode interactif pour exécuter des tests automatisés.
+
+### Endpoints de l'API
+
+#### `POST /api/numbers/`
+
+Cet endpoint prend une liste de nombres et retourne uniquement les nombres pairs.
+
+##### Exemple de requête :
+```bash
+POST http://127.0.0.1:8000/api/numbers/
+Content-Type: application/json
+
+{
+  "numbers": [1, 2, 3, 4, 5, 6]
+}
