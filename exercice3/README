@@ -1,39 +1,68 @@
-# API Django - Gestion des Nombres
+# Gestion des Employés avec SQLite
 
-Ce projet est une API Django simple qui propose deux fonctionnalités principales :
-1. Retourner les nombres pairs à partir d'une liste donnée.
-2. Calculer la somme de deux nombres donnés.
+Ce script Python permet de gérer une base de données SQLite contenant des informations sur les employés, notamment leur nom et leur salaire. Il crée une table, insère des données et récupère les employés ayant un salaire supérieur à 50 000.
 
-## Scripts Disponibles
+## Prérequis
 
-Dans le répertoire du projet, vous pouvez exécuter les commandes suivantes :
+- Python 3.x
+- SQLite3
 
-### `python manage.py runserver`
+## Installation
 
-Lance l'application en mode développement.  
-Ouvrez [http://127.0.0.1:8000](http://127.0.0.1:8000) pour voir l'application dans le navigateur.
+1. Assurez-vous d'avoir Python 3.x installé sur votre machine.
+2. Aucune installation supplémentaire n'est nécessaire pour SQLite3 car il est inclus avec Python.
 
-L'API supporte deux endpoints principaux :
-- [http://127.0.0.1:8000/api/numbers/](http://127.0.0.1:8000/api/numbers/)
-- [http://127.0.0.1:8000/api/sum/](http://127.0.0.1:8000/api/sum/)
+## Utilisation
 
-### `python manage.py test`
+1. **Connexion à la base de données** : Le script se connecte à une base de données SQLite nommée `company.db`. Si la base de données n'existe pas, elle sera créée.
 
-Lance le test runner en mode interactif pour exécuter des tests automatisés.
+    ```python
+    conn = sqlite3.connect('company.db')
+    cursor = conn.cursor()
+    ```
 
-### Endpoints de l'API
+2. **Création de la table `employees`** : Le script crée une table `employees` si elle n'existe pas déjà.
 
-#### `POST /api/numbers/`
+    ```python
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS employees (
+        name TEXT,
+        salary INTEGER
+    )
+    ''')
+    ```
 
-Cet endpoint prend une liste de nombres et retourne uniquement les nombres pairs.
+3. **Insertion de données** : Le script insère des données dans la table `employees`.
 
-##### Exemple de requête :
-```bash
-POST http://127.0.0.1:8000/api/numbers/
-Content-Type: application/json
+    ```python
+    employees = [
+        ('Alice', 60000),
+        ('Bob', 45000),
+        ('Charlie', 70000),
+        ('David', 30000)
+    ]
 
-{
-  "numbers": [1, 2, 3, 4, 5, 6]
-}
+    cursor.executemany('INSERT INTO employees (name, salary) VALUES (?, ?)', employees)
+    ```
 
+4. **Récupération des employés avec un salaire supérieur à 50 000** : Le script récupère et affiche les employés ayant un salaire supérieur à 50 000.
 
+    ```python
+    cursor.execute('SELECT name, salary FROM employees WHERE salary > 50000')
+    high_salary_employees = cursor.fetchall()
+
+    print("Employés avec un salaire supérieur à 50000 :")
+    for employee in high_salary_employees:
+        print(f"Nom: {employee[0]}, Salaire: {employee[1]}")
+    ```
+
+5. **Fermeture de la connexion** : Le script sauvegarde les modifications et ferme la connexion à la base de données.
+
+    ```python
+    conn.commit()
+    conn.close()
+    ```
+
+## Auteur
+
+- DIAWARA Karim

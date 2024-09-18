@@ -1,37 +1,114 @@
-# API Django - Gestion des Nombres
+# API REST Django pour la Gestion des Nombres
 
-Ce projet est une API Django simple qui propose deux fonctionnalités principales :
-1. Retourner les nombres pairs à partir d'une liste donnée.
-2. Calculer la somme de deux nombres donnés.
+Ce projet Django fournit deux API REST pour manipuler des nombres : une pour filtrer les nombres pairs et une autre pour additionner deux nombres.
 
-## Scripts Disponibles
+## Prérequis
 
-Dans le répertoire du projet, vous pouvez exécuter les commandes suivantes :
+- Python 3.x
+- Django
+- Django REST framework
 
-### `python manage.py runserver`
+## Installation
 
-Lance l'application en mode développement.  
-Ouvrez [http://127.0.0.1:8000](http://127.0.0.1:8000) pour voir l'application dans le navigateur.
+1. Clonez le dépôt ou téléchargez les fichiers.
+2. Installez les dépendances nécessaires :
 
-L'API supporte deux endpoints principaux :
-- [http://127.0.0.1:8000/api/numbers/](http://127.0.0.1:8000/api/numbers/)
-- [http://127.0.0.1:8000/api/sum/](http://127.0.0.1:8000/api/sum/)
+    ```bash
+    pip install django djangorestframework
+    ```
 
-### `python manage.py test`
+3. Créez un nouveau projet Django (si ce n'est pas déjà fait) et configurez les paramètres de votre projet.
 
-Lance le test runner en mode interactif pour exécuter des tests automatisés.
+## Configuration
 
-### Endpoints de l'API
+1. **Ajoutez les vues** : Dans votre fichier `views.py`, ajoutez les fonctions suivantes :
 
-#### `POST /api/numbers/`
+    ```python
+    from django.shortcuts import render
+    from rest_framework.decorators import api_view
+    from rest_framework.response import Response
 
-Cet endpoint prend une liste de nombres et retourne uniquement les nombres pairs.
+    @api_view(['POST'])
+    def numbers(request):
+        data = request.data.get('numbers', [])
+        pairs = [num for num in data if num % 2 == 0]
+        return Response({'pairs': pairs})
 
-##### Exemple de requête :
-```bash
-POST http://127.0.0.1:8000/api/numbers/
-Content-Type: application/json
+    @api_view(['POST'])
+    def sum_numbers(request):
+        num1 = request.data.get('num1')
+        num2 = request.data.get('num2')
+        total = num1 + num2
+        return Response({'sum': total})
+    ```
 
-{
-  "numbers": [1, 2, 3, 4, 5, 6]
-}
+2. **Configurez les URLs** : Dans votre fichier `urls.py`, ajoutez les chemins suivants :
+
+    ```python
+    from django.urls import path
+    from .views import numbers, sum_numbers
+
+    urlpatterns = [
+        path('api/numbers/', numbers, name='numbers'),
+        path('api/sum/', sum_numbers, name='sum_numbers'),
+    ]
+    ```
+
+3. **Incluez les URLs de l'application** : Dans le fichier `urls.py` de votre projet principal, incluez les URLs de votre application :
+
+    ```python
+    from django.contrib import admin
+    from django.urls import include, path
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('', include('monapp.urls')),  # Incluez les URLs de votre application ici
+    ]
+    ```
+
+## Utilisation
+
+### API pour Filtrer les Nombres Pairs
+
+- **URL** : `http://127.0.0.1:8000/api/numbers/`
+- **Méthode** : POST
+- **Corps de la requête** :
+
+    ```json
+    {
+      "numbers": [1, 2, 3, 4, 5, 6]
+    }
+    ```
+
+- **Réponse** :
+
+    ```json
+    {
+        "pairs": [2, 4, 6]
+    }
+    ```
+
+### API pour Additionner Deux Nombres
+
+- **URL** : `http://127.0.0.1:8000/api/sum/`
+- **Méthode** : POST
+- **Corps de la requête** :
+
+    ```json
+    {
+      "num1": 3,
+      "num2": 5
+    }
+    ```
+
+- **Réponse** :
+
+    ```json
+    {
+        "sum": 8
+    }
+    ```
+
+## Auteur
+
+- DIAWARA Karim

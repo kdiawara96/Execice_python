@@ -1,37 +1,39 @@
-# API Django - Gestion des Nombres
+# Filtrage des Prénoms
 
-Ce projet est une API Django simple qui propose deux fonctionnalités principales :
-1. Retourner les nombres pairs à partir d'une liste donnée.
-2. Calculer la somme de deux nombres donnés.
+Ce script Python permet de filtrer une liste de prénoms en fonction de leur première lettre. Seuls les prénoms commençant par la lettre 'A' sont considérés comme valides.
 
-## Scripts Disponibles
+## Prérequis
 
-Dans le répertoire du projet, vous pouvez exécuter les commandes suivantes :
+- Python 3.x
 
-### `python manage.py runserver`
+## Utilisation
 
-Lance l'application en mode développement.  
-Ouvrez [http://127.0.0.1:8000](http://127.0.0.1:8000) pour voir l'application dans le navigateur.
+1. **Définition de la fonction `filtrer_prenoms`** : La fonction prend une liste de prénoms et retourne une nouvelle liste contenant uniquement les prénoms qui commencent par la lettre 'A'.
 
-L'API supporte deux endpoints principaux :
-- [http://127.0.0.1:8000/api/numbers/](http://127.0.0.1:8000/api/numbers/)
-- [http://127.0.0.1:8000/api/sum/](http://127.0.0.1:8000/api/sum/)
+    ```python
+    def filtrer_prenoms(prenoms):
+        prenoms_valides = []
+        for prenom in prenoms:
+            if prenom.startswith('A'):
+                print(f"{prenom} : prénom valide")
+                prenoms_valides.append(prenom)
+            else:
+                print(f"{prenom} : prénom invalide")
+        return prenoms_valides
+    ```
 
-### `python manage.py test`
+2. **Exemple d'utilisation** : Le script fournit un exemple d'utilisation de la fonction `filtrer_prenoms` avec une liste de prénoms.
 
-Lance le test runner en mode interactif pour exécuter des tests automatisés.
+    ```python
+    # Exemple d'utilisation
+    liste_prenoms = ["Alice", "Bob", "Anna", "Charles", "Amélie"]
+    prenoms_valides = filtrer_prenoms(liste_prenoms)
+    print("Prénoms valides :", prenoms_valides)
+    ```
 
-### Endpoints de l'API
+    Lors de l'exécution de cet exemple, le script affichera les prénoms valides et invalides, et imprimera la liste des prénoms valides.
 
-#### `POST /api/numbers/`
+## Auteur
 
-Cet endpoint prend une liste de nombres et retourne uniquement les nombres pairs.
+- DIAWARA Karim
 
-##### Exemple de requête :
-```bash
-POST http://127.0.0.1:8000/api/numbers/
-Content-Type: application/json
-
-{
-  "numbers": [1, 2, 3, 4, 5, 6]
-}
